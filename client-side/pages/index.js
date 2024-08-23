@@ -60,12 +60,12 @@ const MernCamp = ({ posts }) => {
     <>
       {head()}
       <ParallaxBG url="/images/default.jpg">SOCIAL NETWORK</ParallaxBG>
-      <div className="container">
-        <button onClick={()=>{
+       <div className="container"> 
+        {/* <button onClick={()=>{
             socket.emit('send-message',"This is ryan")
         }}>
             Send message
-        </button>
+        </button>  */}
         <div className="row pt-5">
           {collection.map((post) => (
             <div key={post._id} className="col-md-4">

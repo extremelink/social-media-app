@@ -7,12 +7,16 @@ require('dotenv').config();
 
 
 
+const allowedOrigins = [
+    process.env.CLIENT_URL,  // For local development
+    process.env.DEPLOYED_URL // For production
+];
 
 const app = express();
 const http = require('http').createServer(app);
 const io = require("socket.io")(http,{
     cors:{
-        origin:'http://localhost:3000',
+        origin:allowedOrigins,
         methods:["GET","POST"],
         allowedHeaders:["Content-type"]
     }
@@ -28,20 +32,11 @@ mongoose.connect(process.env.DATABASE)
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cors({
-    origin:[process.env.CLIENT_URL]
+    origin:allowedOrigins
 }))
 
 //autoload routes
 const read = fs.readdirSync('./routes').map(r=>app.use('/api/',require(`./routes/${r}`)));
-
-// socketio
-// io.on('connect',(socket)=>{
-//     console.log('socektio',socket.id)
-//     socket.on('send-message',(message)=>{
-//         // console.log('new message received =>',message);
-//         socket.broadcast.emit('receive-message',message);
-//     })
-// });
 
 io.on('connect',(socket)=>{
     console.log('socektio',socket.id)
@@ -55,6 +50,3 @@ io.on('connect',(socket)=>{
 http.listen(port,()=>{
 console.log(`server is running on http://localhost:${port}`);
 })
-
-
-
